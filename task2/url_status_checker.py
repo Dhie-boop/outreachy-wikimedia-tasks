@@ -18,7 +18,6 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 
-
 class URLStatusChecker:
     """Handles URL status checking with retry logic and session management."""
     
