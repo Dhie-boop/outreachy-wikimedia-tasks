@@ -1,18 +1,4 @@
-"""
-URL Status Checker - A tool to check HTTP status codes for URLs from a CSV file.
-
-This script reads URLs from a CSV file and checks their HTTP status codes,
-with support for retries, concurrent processing, and detailed error reporting.
-"""
-
-import argparse
 import csv
-import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
-from typing import Optional, Tuple
-from urllib.parse import urlparse
-
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -99,26 +85,19 @@ class URLStatusChecker:
         self.session.close()
 
 
-def read_urls_from_csv(csv_file: str) -> list[str]:
+def get_url_status(url):
     """
-    Read URLs from a CSV file.
+    Get the HTTP status code for a given URL.
     
     Args:
-        csv_file: Path to the CSV file
+        url (str): The URL to check
         
     Returns:
-        List of URLs
-        
-    Raises:
-        FileNotFoundError: If the CSV file doesn't exist
-        ValueError: If the CSV file is empty or invalid
+        int: The HTTP status code, or None if request fails
     """
-    file_path = Path(csv_file)
-    
-    if not file_path.exists():
-        raise FileNotFoundError(f"CSV file not found: {csv_file}")
-    
-    urls = []
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
     
     try:
         with open(file_path, 'r', encoding='utf-8-sig') as file:
@@ -183,37 +162,22 @@ def check_urls_sequential(urls: list[str], checker: URLStatusChecker,
 def check_urls_concurrent(urls: list[str], checker: URLStatusChecker, 
                           max_workers: int = 10, 
                           output_file: Optional[str] = None) -> dict:
+        response = requests.get(url, timeout=10, headers=headers, verify=True)
+        return response.status_code
+    except requests.exceptions.RequestException:
+        return None
+
+def main():
     """
-    Check URLs concurrently using ThreadPoolExecutor.
-    
-    Args:
-        urls: List of URLs to check
-        checker: URLStatusChecker instance
-        max_workers: Maximum number of concurrent workers
-        output_file: Optional file path to save results
-        
-    Returns:
-        Dictionary with statistics
+    Read URLs from CSV file and print their status codes.
     """
-    results = []
-    stats = {"total": len(urls), "success": 0, "failed": 0}
-    completed = 0
+    csv_file = 'Task 2 - Intern.csv'
     
-    print(f"\nChecking {len(urls)} URLs concurrently (max {max_workers} workers)...\n")
-    
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_url = {executor.submit(checker.check_url, url): url for url in urls}
+    with open(csv_file, 'r', encoding='utf-8-sig') as file:
+        csv_reader = csv.DictReader(file)
         
-        for future in as_completed(future_to_url):
-            completed += 1
-            url_result, status_code, error_msg = future.result()
-            
-            if status_code:
-                output = f"({status_code}) {url_result}"
-                stats["success"] += 1
-            else:
-                output = f"(ERROR: {error_msg}) {url_result}"
-                stats["failed"] += 1
+        for row in csv_reader:
+            url = list(row.values())[0] if row else None
             
             print(f"[{completed}/{len(urls)}] {output}")
             results.append(output)
@@ -334,6 +298,13 @@ Examples:
         print(f"\n✗ Unexpected error: {e}", file=sys.stderr)
         sys.exit(1)
 
+            if url:
+                status_code = get_url_status(url)
+                
+                if status_code:
+                    print(f"({status_code}) {url}")
+                else:
+                    print(f"(ERROR) {url}")
 
 if __name__ == "__main__":
     main()
