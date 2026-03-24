@@ -127,9 +127,8 @@ def read_urls_from_csv(csv_file: str) -> list[str]:
             if not csv_reader.fieldnames:
                 raise ValueError("CSV file appears to be empty")
             
-            for row_num, row in enumerate(csv_reader, start=2):  # Start at 2 (header is 1)
+            for row_num, row in enumerate(csv_reader, start=2):  
                 if row:
-                    # Get the first non-empty value from the row
                     url = next((v.strip() for v in row.values() if v and v.strip()), None)
                     if url:
                         urls.append(url)
@@ -174,7 +173,7 @@ def check_urls_sequential(urls: list[str], checker: URLStatusChecker,
         print(f"[{i}/{len(urls)}] {output}")
         results.append(output)
     
-    # Save to file if requested
+    
     if output_file:
         save_results(output_file, results)
     
@@ -219,7 +218,7 @@ def check_urls_concurrent(urls: list[str], checker: URLStatusChecker,
             print(f"[{completed}/{len(urls)}] {output}")
             results.append(output)
     
-    # Save to file if requested
+    
     if output_file:
         save_results(output_file, results)
     
@@ -254,10 +253,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s                                    # Use default CSV file
-  %(prog)s -f urls.csv                        # Specify custom CSV file
-  %(prog)s --concurrent --workers 20          # Use 20 concurrent workers
-  %(prog)s -o results.txt                     # Save results to file
+  %(prog)s                                    
+  %(prog)s -f urls.csv                        
+  %(prog)s --concurrent --workers 20          
+  %(prog)s -o results.txt                     
   %(prog)s -f urls.csv -o results.txt --concurrent
         """
     )
@@ -303,20 +302,20 @@ Examples:
     args = parser.parse_args()
     
     try:
-        # Read URLs from CSV
+        
         urls = read_urls_from_csv(args.file)
         
-        # Initialize checker
+        
         checker = URLStatusChecker(timeout=args.timeout, max_retries=args.retries)
         
         try:
-            # Check URLs
+            
             if args.concurrent:
                 stats = check_urls_concurrent(urls, checker, args.workers, args.output)
             else:
                 stats = check_urls_sequential(urls, checker, args.output)
             
-            # Print statistics
+            
             print_statistics(stats)
             
         finally:
