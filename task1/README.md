@@ -10,6 +10,8 @@ The script:
 
 - Takes an array of JSON objects containing Wikipedia article information
 - Parses and formats ISO date strings (YYYY-MM-DD) into human-readable format (Month Day, Year)
+- Uses `Intl.DateTimeFormat` for locale-aware date formatting
+- Handles dates as UTC to ensure consistent output across all timezones
 - Generates formatted text for each article
 - Displays both the source code and the formatted results on the page
 
@@ -94,8 +96,16 @@ When you open the HTML file, you'll see results like:
 ### Date Formatting Function
 
 - Converts ISO date format (2021-09-13) to readable format (September 13, 2021)
-- Uses JavaScript's `Date` object for parsing
-- Handles month name conversion automatically
+- Uses `Intl.DateTimeFormat` API for locale-aware formatting
+- Parses dates as UTC using `Date.UTC()` to prevent timezone offset issues
+- Supports easy internationalization by changing the locale parameter
+- Ensures consistent date display regardless of user's local timezone
+
+### Benefits of the Implementation
+
+- **No hardcoded month names**: Eliminates potential typos and makes maintenance easier
+- **Locale support**: Can easily switch to other languages (e.g., 'pt-BR' for Portuguese)
+- **Timezone-safe**: Dates display correctly in all timezones (UTC-3, UTC+5, etc.)
 
 ### Dynamic Content Rendering
 

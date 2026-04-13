@@ -39,6 +39,7 @@ A JavaScript-based HTML page that manipulates JSON data containing Wikipedia art
 
 - Processes an array of JSON objects with Wikipedia article information
 - Converts ISO date strings (YYYY-MM-DD) to readable format (Month Day, Year)
+- Uses `Intl.DateTimeFormat` for locale-aware, timezone-safe date formatting
 - Generates formatted sentences for each article
 - Displays results dynamically on the webpage
 
@@ -79,7 +80,7 @@ Article "Cristine Takuá" (Page ID 7069044) was created at February 16, 2023.
 - JavaScript (ES6+)
 - HTML5
 - DOM manipulation
-- Date object formatting
+- `Intl.DateTimeFormat` API for locale-aware date formatting
 
 ---
 
@@ -87,7 +88,7 @@ Article "Cristine Takuá" (Page ID 7069044) was created at February 16, 2023.
 
 ### Description
 
-A Python script that reads URLs from a CSV file and retrieves the HTTP status code for each URL, displaying results in a formatted output.
+A simple Python script that reads URLs from a CSV file and retrieves the HTTP status code for each URL, displaying results in a formatted output. The script is straightforward and focused (47 lines), without complex CLI features.
 
 ### What It Does
 
@@ -103,7 +104,6 @@ A Python script that reads URLs from a CSV file and retrieves the HTTP status co
 
 - Python 3.6 or higher
 - `requests` library
-- `types-requests` (optional, for type checking)
 
 **Step 1: Create a Virtual Environment**
 
@@ -130,7 +130,6 @@ pip install -r requirements.txt
 
 # Or install manually:
 pip install requests
-pip install types-requests  
 ```
 
 **Step 3: Run the Script**
@@ -164,7 +163,14 @@ python url_status_checker.py
 - Python 3
 - `requests` library for HTTP requests
 - `csv` module for file parsing
-- Error handling for network issues
+- Simple error handling for network issues
+
+### Key Features
+
+- Simple, focused implementation without complex CLI features
+- 10-second timeout for each request
+- Browser User-Agent header for better website compatibility
+- Graceful error handling for connection failures
 
 ---
 
