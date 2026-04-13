@@ -35,52 +35,35 @@ The script prints results in the following format:
 
 - Python 3.6 or higher
 - `requests` library
-- `types-requests` (for type checking)
 
 ## Installation
 
-### 1. Create a Virtual Environment
-
-```bash
-# Navigate to the task2 directory
-cd task2
-
-# Create your virtual environment 
-python -m venv venv
-
-# Activate the virtual environment
-# On Windows:
-venv\Scripts\activate
-
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-### 2. Install Dependencies
+### 1. Install Dependencies
 
 ```bash
 # Install the requests library
-pip install -r requirements.txt
-
+pip install requests
 ```
 
-### 3. Verify Installation
+Or install from requirements.txt:
 
 ```bash
-# Check installed packages
-pip list
+pip install -r requirements.txt
 ```
-
-You should see `requests` and `urllib3` in the list.
 
 ## Usage
 
-1. Ensure your virtual environment is activated
-2. Make sure `Task 2 - Intern.csv` is in the same directory as the script
-3. Run the script:
+1. Make sure `Task 2 - Intern.csv` is in the same directory as the script
+2. Run the script:
 
 ```bash
 python url_status_checker.py
+```
+
+**Note:** If you created a virtual environment in the `task2` subdirectory, use:
+
+```bash
+task2\Scripts\python url_status_checker.py
 ```
 
 ## Expected Output
@@ -94,16 +77,17 @@ The script will print status codes for all URLs in the CSV file. Some URLs may s
 
 This is expected behavior for old or inactive URLs.
 
+## Implementation Details
+
+- Simple, focused script without complex CLI features
+- Uses `requests` library for HTTP requests
+- Sets a browser User-Agent header for better compatibility
+- 10-second timeout for each request
+- Gracefully handles connection errors, timeouts, and other exceptions
+
 ## Files
 
-- `url_status_checker.py` - Main Python script
+- `url_status_checker.py` - Main Python script (47 lines)
 - `Task 2 - Intern.csv` - Input file containing URLs
-- `requirements.txt` - List of project dependencies
+- `requirements.txt` - Python dependencies
 - `README.md` - This documentation file
-
-## Notes
-
-- The script includes a 10-second timeout for each request
-- Uses UTF-8-BOM encoding to handle CSV files properly
-- Includes a User-Agent header to prevent blocking by some websites
-- Error handling ensures the script continues even if individual URLs fail
